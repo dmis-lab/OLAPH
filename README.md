@@ -69,11 +69,11 @@ We provide the reconstructed datasets for automatic evaluation of long-form gene
 # For first sampling predictions
 conda activate olaph_inference
 
-export DATANAME=live_qa
+export DATA_NAME=live_qa
 export HUGGINGFACE_MODEL_DIR=dmis-lab/selfbiorag_7b
 CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 --model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
---eval_data ${DATANAME} \
+--eval_data ${DATA_NAME} \
 ```
 
 ```
@@ -81,11 +81,11 @@ CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 conda deactivate
 conda activate olaph_inference
 
-export DATANAME=live_qa
+export DATA_NAME=live_qa
 export HUGGINGFACE_MODEL_DIR=your_trained_model
 CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 --model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
---eval_data ${DATANAME} \
+--eval_data ${DATA_NAME} \
 ```
 
 
@@ -117,12 +117,22 @@ recipes/selfbiorag_7b/sft/config_full.yaml \
 conda activate olaph_inference
 
 export HUGGINGFACE_MODEL_DIR=your_trained_model
-export wodata_name=kqa_golden
+export DATA_NAME=live_qa
+export WODATA_NAME=kqa_golden
 
 python pred_to_preference.py \
 --model_name ${HUGGINGFACE_MODEL_DIR} \
---wodata_name ${wodata_name} \
+--wodata_name ${WODATA_NAME} \
 --data_names live_qa+medication_qa+healthsearch_qa+kqa_golden+kqa_silver_wogold \
+--alpha 1.0 \
+--beta 1.0 \
+--gamma 1.0 \
+--threshold 200 \
+
+python pred_to_preference.py \
+--model_name ${HUGGINGFACE_MODEL_DIR} \
+--wodata_name ${WODATA_NAME} \
+--data_names ${DATA_NAME} \
 --alpha 1.0 \
 --beta 1.0 \
 --gamma 1.0 \
@@ -149,7 +159,10 @@ We train and generate sampling predictions through separate files and do several
 In future, we will provide the processes execution in one simple bash file.
 
 Our iterative learning consists of the following processes \
-Sampling predictions (Raw) - SFT - Sampling predictions - DPO - DPO - DPO (until convergence)
+Sampling predictions (Raw) - SFT - (Sampling predictions - Make preference set) \
+- DPO - (Sampling predictions - Make preference set) \
+- DPO - (Sampling predictions - Make preference set) \
+- DPO - (until convergence)
 
 ## FactScore
 TBA
