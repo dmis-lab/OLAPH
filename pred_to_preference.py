@@ -45,7 +45,7 @@ def main():
     parser.add_argument('--model_name', type=str, default="dmis-lab/selfbiorag_7b")
     parser.add_argument('--wodata_name', type=str, default="kqa_golden")
     parser.add_argument('--data_names', type=str, split="+")
-    parser.add_argument('--alhpa', type=int, default=1)
+    parser.add_argument('--alpha', type=int, default=1)
     parser.add_argument('--beta', type=int, default=1)
     parser.add_argument('--gamma', type=int, default=1)
     parser.add_argument('--threshold', type=int, default=200)

@@ -111,6 +111,24 @@ scripts/run_sft.py \
 recipes/selfbiorag_7b/sft/config_full.yaml \
 ```
 
+* Make synthetic preference set based on sampling predictions
+
+```
+conda activate olaph_inference
+
+export HUGGINGFACE_MODEL_DIR=your_trained_model
+export wodata_name=kqa_golden
+
+python pred_to_preference.py \
+--model_name ${HUGGINGFACE_MODEL_DIR} \
+--wodata_name ${wodata_name} \
+--data_names live_qa+medication_qa+healthsearch_qa+kqa_golden+kqa_silver_wogold \
+--alpha 1.0 \
+--beta 1.0 \
+--gamma 1.0 \
+--threshold 200 \
+```
+
 * Direct Preference Optimization (DPO)
 
 ```
