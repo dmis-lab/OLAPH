@@ -1,2 +1,2 @@
 # OLAPH
-OLAPH: Optimize Language Models’ Answers by Mitigating Hallucination in Biomedical Long-text Generation
+OLAPH: Improving Factuality in Biomedical Long-form Question Answering
