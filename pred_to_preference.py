@@ -24,11 +24,7 @@ def make_inst(model_name, chosen_idx, reject_idx, inst):
         chosen = inst["sample_predictions"][chosen_idx]
         rejected = inst["sample_predictions"][reject_idx]
 
-    if "\u00ef\u00bb\u00bf" in chosen or "\u00ef\u00bb\u00bf" in rejected:
-        return None
-    elif "\ub530\uc628" in chosen or "\uac83\uc785\ub2c8" in chosen:
-        return None
-    elif "::" in chosen or "::" in rejected:
+    if "::" in chosen or "::" in rejected:
         return None
     elif "....." in chosen or "....." in rejected:
         return None
@@ -42,9 +38,9 @@ def make_inst(model_name, chosen_idx, reject_idx, inst):
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default="dmis-lab/selfbiorag_7b")
+    parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b")
     parser.add_argument('--wodata_name', type=str, default="kqa_golden")
-    parser.add_argument('--data_names', type=str, split="+")
+    parser.add_argument('--data_names', type=str, split="+", default="live_qa+medication_qa+healthsearch_qa+kqa_silver_wogold+kqa_golden")
     parser.add_argument('--alpha', type=int, default=1)
     parser.add_argument('--beta', type=int, default=1)
     parser.add_argument('--gamma', type=int, default=1)
@@ -52,7 +48,20 @@ def main():
     args = parser.parse_args()
 
     examples = []
-    model_name = args.model_name
+    
+    if "selfbiorag" in args.model_name_or_path.lower():
+        model_name = "selfbiorag-7b"
+    elif "biomistral" in args.model_name_or_path.lower():
+        model_name = "biomistral-7b"
+    elif "mistral" in args.model_name_or_path.lower():
+        model_name = "mistral-7b"
+    elif "llama" in args.model_name_or_path.lower():
+        model_name = "llama2-7b"
+    elif "meditron" in args.model_name_or_path.lower():
+        model_name = "meditron-7b"
+    else:
+        model_name = args.model_name_or_path.split("/")[1]
+
     wodata_name = args.wodata_name
     # data_names = ["live_qa", "medication_qa", "healthsearch_qa", "kqa_silver_wogold", "kqa_golden"]
     data_names = args.data_names

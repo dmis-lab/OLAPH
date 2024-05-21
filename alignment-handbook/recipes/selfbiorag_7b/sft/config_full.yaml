@@ -10,6 +10,7 @@ dataset_splits:
 - train_sft
 - test_sft
 preprocessing_num_workers: 12
+# data_name: live_qa
 
 # SFT trainer config
 bf16: true

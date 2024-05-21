@@ -17,12 +17,13 @@
 Supervised fine-tuning script for decoder language models.
 """
 import os
-import logging
-import random
 import sys
+import torch
+import random
+import logging
 
 import datasets
-import torch
+import argparse
 import transformers
 from transformers import AutoModelForCausalLM, set_seed
 
@@ -44,7 +45,6 @@ from alignment import (
 )
 from trl import SFTTrainer, setup_chat_format
 
-
 logger = logging.getLogger(__name__)
 
 def formatting_prompts_func(example):
@@ -57,7 +57,6 @@ def formatting_prompts_func(example):
 def main():
     parser = H4ArgumentParser((ModelArguments, DataArguments, SFTConfig))
     model_args, data_args, training_args = parser.parse()
-
     # Set seed for reproducibility
     set_seed(training_args.seed)
 
@@ -71,7 +70,7 @@ def main():
     )
     log_level = training_args.get_process_log_level()
     logger.setLevel(log_level)
-    datasets.utils.logging.set_verbosity(log_level)
+    # datasets.utils.logging.set_verbosity(log_level)
     transformers.utils.logging.set_verbosity(log_level)
     transformers.utils.logging.enable_default_handler()
     transformers.utils.logging.enable_explicit_format()
@@ -82,7 +81,7 @@ def main():
         + f" distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
     )
     logger.info(f"Model parameters {model_args}")
-    logger.info(f"Data parameters {data_args}")
+    # logger.info(f"Data parameters {data_args}")
     logger.info(f"Training/evaluation parameters {training_args}")
 
     # Check for last checkpoint
@@ -90,16 +89,9 @@ def main():
     if last_checkpoint is not None and training_args.resume_from_checkpoint is None:
         logger.info(f"Checkpoint detected, resuming training at {last_checkpoint=}.")
 
-    
     ###############
     # Load datasets
     ###############
-    raw_datasets = get_datasets(data_args, splits=data_args.dataset_splits)
-    logger.info(
-        f"Training on the following datasets and their proportions: {[split + ' : ' + str(dset.num_rows) for split, dset in raw_datasets.items()]}"
-    )
-    column_names = list(raw_datasets["train"].features)
-
     # load bio LFQA dataset
     original_hub_id = training_args.hub_model_id
     original_output_dir = training_args.output_dir
@@ -112,12 +104,26 @@ def main():
     ################
     # Load tokenizer
     ################
-    # model_name = model_args.model_name_or_path.split("/")[1]
-    model_name = training_args.output_dir.split("/")[1].split("-")[0]
+    
+    import pdb; pdb.set_trace()
+    if "selfbiorag" in model_args.model_name_or_path.lower():
+        model_name = "selfbiorag-7b"
+    elif "biomistral" in model_args.model_name_or_path.lower():
+        model_name = "biomistral-7b"
+    elif "mistral" in model_args.model_name_or_path.lower():
+        model_name = "mistral-7b"
+    elif "llama" in model_args.model_name_or_path.lower():
+        model_name = "llama2-7b"
+    elif "meditron" in model_args.model_name_or_path.lower():
+        model_name = "meditron-7b"
+    else:
+        model_name = model_args.model_name_or_path.split("/")[1]
+    # model_name = training_args.output_dir.split("/")[1].split("-")[0]
     all_datasets = []
 
-    train_datasets = load_dataset("json", data_files=f"./preference/{model_name}/wo_{data_name}_train_iter_sft_step1.jsonl")
-    test_datasets = load_dataset("json", data_files=f"./preference/LFQA/{data_name}_test_post_sft.jsonl")
+    pdata_{model_name}_{eval_name}_sampling.jsonl_tmp
+    train_datasets = load_dataset("json", data_files=f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl")
+    test_datasets = load_dataset("json", data_files=f"./predictions/pdata_{data_name}_sampling.jsonl")
     
     data_args.truncation_side = "left"  # Truncate from left to ensure we don't lose labels in final turn
     tokenizer = get_tokenizer(model_args, data_args)
@@ -141,50 +147,10 @@ def main():
         quantization_config=quantization_config,
     )
 
-    model = model_args.model_name_or_path
-    """
-    # For ChatML we need to add special tokens and resize the embedding layer
-    # if "<|im_start|>" in tokenizer.chat_template:
-    #     model = AutoModelForCausalLM.from_pretrained(model_args.model_name_or_path, **model_kwargs)
-    #     model, tokenizer = setup_chat_format(model, tokenizer)
-    #     model_kwargs = None
-    
-    #####################
-    # Apply chat template
-    #####################
-    raw_datasets = raw_datasets.map(
-        apply_chat_template,
-        fn_kwargs={
-            "tokenizer": tokenizer,
-            "task": "sft",
-            "auto_insert_empty_system_msg": data_args.auto_insert_empty_system_msg,
-        },
-        num_proc=data_args.preprocessing_num_workers,
-        remove_columns=column_names,
-        desc="Applying chat template",
-    )
-
-    ##########################
-    # Decontaminate benchmarks
-    ##########################
-    num_raw_train_samples = len(raw_datasets["train"])
-    raw_datasets = raw_datasets.filter(decontaminate_humaneval, batched=True, batch_size=10_000, num_proc=1)
-    num_filtered_train_samples = num_raw_train_samples - len(raw_datasets["train"])
-    logger.info(
-        f"Decontaminated {num_filtered_train_samples} ({num_filtered_train_samples/num_raw_train_samples * 100:.2f}%) samples from the training set."
-    )
-    """
-    
-
-    # train_dataset = raw_datasets["train"]
-    # eval_dataset = raw_datasets["test"]
+    model = model_args.model_name_or_path    
     train_dataset = train_datasets["train"]
     eval_dataset = test_datasets["train"]
     
-    # with training_args.main_process_first(desc="Log a few random samples from the processed training set"):
-    #     for index in random.sample(range(len(train_datasets["train"])), 3):
-    #         logger.info(f"Sample {index} of the processed training set:\n\n{train_datasets['train'][index]['text']}")
-
     ########################
     # Initialize the Trainer
     ########################

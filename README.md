@@ -195,10 +195,11 @@ We train and generate sampling predictions through separate files and do several
 In future, we will provide the processes execution in one simple bash file.
 
 Our iterative learning consists of the following processes \
-Sampling predictions (Raw) - SFT - (Sampling predictions - Make preference set) \
-- DPO - (Sampling predictions - Make preference set) \
-- DPO - (Sampling predictions - Make preference set) \
-- DPO - (until convergence)
+- Sampling predictions (pdata_collection.py) - Make SFT set (pred_to_sft.py) \
+- SFT - Sampling predictions (pdata_collection.py) - Make preference set (pred_to_preference.py) \
+- DPO - Sampling predictions (pdata_collection.py) - Make preference set (pred_to_preference.py) \
+- DPO - Sampling predictions (pdata_collection.py) - Make preference set (pred_to_preference.py) \
+- DPO 
 
 ## FactScore
 TBA

@@ -292,7 +292,6 @@ def main():
     # 0.0 / 18.18
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b", choices=["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"])
-    parser.add_argument('--write_name', type=str)
     parser.add_argument('--max_length', type=int, default=2048)
     parser.add_argument('--download_dir', type=str, help="specify vllm model download dir",
                         default="/ssd0/minbyul/cache/") # need change
@@ -313,10 +312,21 @@ def main():
         os.mkdir("./predictions")
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    if not args.write_name:
-        args.write_name = args.model_name_or_path.split("/")[1]
 
-    if "meditron-7b" in args.model_name_or_path.lower() or "llama2-7b" in args.model_name_or_path.lower() or "mistral-7b" in args.model_name_or_path.lower():
+    if "selfbiorag" in args.model_name_or_path.lower():
+        model_name = "selfbiorag-7b"
+    elif "biomistral" in args.model_name_or_path.lower():
+        model_name = "biomistral-7b"
+    elif "mistral" in args.model_name_or_path.lower():
+        model_name = "mistral-7b"
+    elif "llama" in args.model_name_or_path.lower():
+        model_name = "llama2-7b"
+    elif "meditron" in args.model_name_or_path.lower():
+        model_name = "meditron-7b"
+    else:
+        model_name = args.model_name_or_path.split("/")[1]
+
+    if "meditron" in args.model_name_or_path.lower() or "llama" in args.model_name_or_path.lower() or "mistral" in args.model_name_or_path.lower():
         model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, torch_dtype=torch.float16).to(device)
         tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, padding_side="left")
     else:
@@ -333,8 +343,8 @@ def main():
     eval_name = args.eval_data
     train_examples = []
     
-    if os.path.exists(f"./predictions/pdata_{args.write_name}_{eval_name}_iter-dpo-step.jsonl_tmp"):
-        filename = f"./predictions/pdata_{args.write_name}_{eval_name}_iter-dpo-step.jsonl_tmp"
+    if os.path.exists(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
+        filename = f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
@@ -416,12 +426,12 @@ def main():
         if (inst_idx+1) % 5 == 0:
             print (inst)
             
-            with open(f"./predictions/pdata_{args.write_name}_{eval_name}_iter-dpo-step.jsonl_tmp", "w") as outfile:
+            with open(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
                 for inst in train_examples:
                     outfile.write(json.dumps(inst))
                     outfile.write("\n")
 
-    with open(f"./predictions/pdata_{args.write_name}_{eval_name}_iter-dpo-step.jsonl", "w") as outfile:
+    with open(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl", "w") as outfile:
         for inst in train_examples:
             outfile.write(json.dumps(inst))
             outfile.write("\n")

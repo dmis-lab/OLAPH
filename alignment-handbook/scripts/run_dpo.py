@@ -141,28 +141,27 @@ def main():
         # Set seed for reproducibility
         set_seed(training_args.seed)
 
-        if "7b" in model_args.model_name_or_path.lower() or "sft" in model_args.model_name_or_path or "dpo" in model_args.model_name_or_path:
-            if "selfbiorag" in model_args.model_name_or_path.lower():
-                model_name = "selfbiorag-7b"
-            elif "biomistral" in model_args.model_name_or_path.lower():
-                model_name = "biomistral-7b"
-            elif "mistral" in model_args.model_name_or_path.lower():
-                model_name = "mistral-7b"
-            elif "llama" in model_args.model_name_or_path.lower():
-                model_name = "llama2-7b"
-            elif "meditron" in model_args.model_name_or_path.lower():
-                model_name = "meditron-7b"
+        if "selfbiorag" in model_args.model_name_or_path.lower():
+            model_name = "selfbiorag-7b"
+        elif "biomistral" in model_args.model_name_or_path.lower():
+            model_name = "biomistral-7b"
+        elif "mistral" in model_args.model_name_or_path.lower():
+            model_name = "mistral-7b"
+        elif "llama" in model_args.model_name_or_path.lower():
+            model_name = "llama2-7b"
+        elif "meditron" in model_args.model_name_or_path.lower():
+            model_name = "meditron-7b"
         else:
             model_name = model_args.model_name_or_path.split("/")[1]
 
         # DPO training
         # train_datasets = load_dataset("json", data_files=f"./preference/preference_{model_name}_test_all_wo_{data_name}.jsonl")
         # test_datasets = load_dataset("json", data_files=f"./preference/preference_{model_name}_test_{data_name}.jsonl")
-        target_dir = model_name.split("-")[0]
+        # target_dir = model_name.split("-")[0]
 
         # OLAPH training
-        train_datasets = load_dataset("json", data_files=f"./preference/{target_dir}/preference_{model_name}_test_all_wo_{data_name}_iter-dpo-step3-filtered.jsonl")
-        test_datasets = load_dataset("json", data_files=f"./preference/{target_dir}/preference_{model_name}_test_{data_name}_iter-dpo-step3-filtered.jsonl")
+        train_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_all_wo_{data_name}_iter-dpo-step3-filtered.jsonl")
+        test_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_{data_name}_iter-dpo-step3-filtered.jsonl")
         data_args.truncation_side = "left"  # Truncate from left to ensure we don't lose labels in final turn
         tokenizer = get_tokenizer(model_args, data_args)
 

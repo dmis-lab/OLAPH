@@ -52,6 +52,7 @@ class H4ArgumentParser(HfArgumentParser):
 
         # overwrite the default/loaded value with the value provided to the command line
         # adapted from https://github.com/huggingface/transformers/blob/d0b5002378daabf62769159add3e7d66d3f83c3b/src/transformers/hf_argparser.py#L327
+        
         for data_yaml, data_class in zip(arg_list, self.dataclass_types):
             keys = {f.name for f in dataclasses.fields(data_yaml) if f.init}
             inputs = {k: v for k, v in vars(data_yaml).items() if k in keys}
@@ -219,6 +220,10 @@ class DataArguments:
                 "Whether to automatically insert an empty system message as the first message if `system` is mentioned in the chat template."
             )
         },
+    )
+    data_name: Optional[str] = field(
+        default=None,
+        metadata={"help": "The MedLFQA dataset name"}
     )
 
 
