@@ -105,7 +105,6 @@ def main():
     # Load tokenizer
     ################
     
-    import pdb; pdb.set_trace()
     if "selfbiorag" in model_args.model_name_or_path.lower():
         model_name = "selfbiorag-7b"
     elif "biomistral" in model_args.model_name_or_path.lower():
