@@ -85,6 +85,7 @@ You can download 7B models trained with our OLAPH framework from HuggingFace hub
 ```py
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+model_name = "" # ["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"]
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
 
