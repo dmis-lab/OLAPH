@@ -25,6 +25,48 @@ Please create a conda environment by running the command below.
 Note that we use two different environments to train and inference.
 I will ensure that everything is integrated into a single environment and functions properly in the future.
 
+First, you have to install following [alignment-handbook](https://github.com/huggingface/alignment-handbook/tree/main).
+We use PyTorch v2.1.2, which is important for reproducibility! \
+Since this is dependent on your environmental settings, please follow and use compatible version of Pytorch from [here](https://pytorch.org/get-started/locally/) \
+
+Then, we install the remaining package dependencies as follows:
+
+```
+conda create -n olaph python=3.10
+cd ./alignment-handbook/ \
+python -m pip install .
+```
+
+This could lead us to install for the most recent version of torch.
+However, we use CUDA 11.8 version in our experimental settings.
+Thus, we recommend you to download a below code to reproduce our results \
+
+
+<!-- conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=11.8 -c pytorch -c nvidia -->
+```
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+```
+
+You will need Flash Attention 2 installed \
+
+```
+python -m pip install flash-attn==2.5.6 --no-build-isolation \
+```
+
+We need further requirments to install for automatic evaluation or vllm for boosting inference speed \
+```
+pip install -r requirements.txt --no-build-isolation \
+pip install git+https://github.com/lucadiliello/bleurt-pytorch.git \
+```
+
+Also, you will need to log into your Huggingface account (make sure your account token should be in WRITE status)
+Then, install the Git LFS to upload your models as follows:
+
+```
+huggingface-cli login \
+sudo apt-get install git-lfs \
+```
+<!-- 
 For training,
 ```
 conda env create -f training.yaml
@@ -35,7 +77,7 @@ For inference,
 ```
 conda env create -f inference.yaml
 conda activate olaph_inference
-```
+``` -->
 
 
 ## Quick Usage

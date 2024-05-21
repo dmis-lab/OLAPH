@@ -16,7 +16,6 @@ from peft import PeftModel, PeftConfig
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
 from bleurt_pytorch import BleurtConfig, BleurtForSequenceClassification, BleurtTokenizer
     
-from utils import PROMPT_DICT, TASK_INST, load_jsonlines, control_tokens, load_special_tokens
 # from openai.error import APIError, Timeout, APIConnectionError
 
 # openai.api_key_path = "./key.txt"
@@ -292,11 +291,11 @@ def main():
     # comp_score = comprehensiveness(query, pred, must_have)
     # 0.0 / 18.18
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b")
+    parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b", choices=["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"])
     parser.add_argument('--write_name', type=str)
     parser.add_argument('--max_length', type=int, default=2048)
     parser.add_argument('--download_dir', type=str, help="specify vllm model download dir",
-                        default="./")
+                        default="/ssd0/minbyul/cache/") # need change
     parser.add_argument('--max_new_tokens', type=int, default=512)
     parser.add_argument("--world_size",  type=int, default=1,
                         help="world size to use multiple GPUs.")
@@ -310,6 +309,9 @@ def main():
     parser.add_argument('--repetition_penalty', type=float, default=1.0)
     args = parser.parse_args()
 
+    if not os.path.exists("./predictions"):
+        os.mkdir("./predictions")
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if not args.write_name:
         args.write_name = args.model_name_or_path.split("/")[1]
@@ -321,8 +323,7 @@ def main():
         model = LLM(model=args.model_name_or_path, download_dir=args.download_dir,
                     dtype=args.dtype, tensor_parallel_size=args.world_size,)
         tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, padding_side="left")
-    
-
+        
     # load prediction and dataset
     # evaluation_list = ["live_qa", "medication_qa", "kqa_golden", "kqa_silver_wogold", "healthsearch_qa"]
     # prompt = "Instruction: Answer the question below with your knowledge.\n\nQuestion: " # prompt_ver1
@@ -338,7 +339,7 @@ def main():
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
     else:
-        filename = f"./benchmark/LFQA/{eval_name}_test_post.jsonl"
+        filename = f"./MedLFQA/{eval_name}_test_MedLFQA.jsonl"
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
@@ -384,14 +385,6 @@ def main():
                 preds = model.generate([query], sampling_params)
                 pred = preds[0].outputs[0].text.strip()
                 sample_predictions.append(pred)
-        
-        # post-process
-        # post_sample_predictions = []
-        # for sample_inst in sample_predictions:
-        #     if "Question: " in sample_inst:
-        #         sample_inst = sample_inst.split("Question: ")[0].strip()
-
-        #     post_sample_predictions.append(sample_inst)
         
         inst['sample_predictions'] = sample_predictions
 
