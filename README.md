@@ -83,12 +83,15 @@ conda activate olaph_inference
 ## Quick Usage
 You can download 7B models trained with our OLAPH framework from HuggingFace hub.
 ```py
+import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+model_name = "" # ["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"]
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
 
-query = "Alright so I don't know much about Lexapro would you tell me ore about it?"
+query = "Alright so I don't know much about Lexapro would you tell me more about it?"
 
 input_ids = tokenizer.encode(query, return_tensors="pt").to(device)
 output = model.generate(input_ids, max_length=512, no_repeat_ngram_size=2, do_sample=False, top_p=1.0).to(device)
@@ -108,23 +111,22 @@ We provide the reconstructed datasets for automatic evaluation of long-form gene
 * Sampling Predictions (Including Automatic Evaluation)
 
 ```
-# For first sampling predictions
-conda activate olaph_inference
+# For first sampling predictions \ 
 
-export DATA_NAME=live_qa
-export HUGGINGFACE_MODEL_DIR=dmis-lab/selfbiorag_7b
+export DATA_NAME=live_qa \
+export HUGGINGFACE_MODEL_DIR=dmis-lab/selfbiorag_7b \
+
 CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 --model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
 --eval_data ${DATA_NAME} \
 ```
 
 ```
-# Sampling prediction during Iterative learning (i.e., after SFT or DPO)
-conda deactivate
-conda activate olaph_inference
+# Sampling prediction during Iterative learning (i.e., after SFT or DPO) \
 
-export DATA_NAME=live_qa
-export HUGGINGFACE_MODEL_DIR=your_trained_model
+export DATA_NAME=live_qa \
+export HUGGINGFACE_MODEL_DIR=your_trained_model \
+
 CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 --model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
 --eval_data ${DATA_NAME} \
@@ -141,11 +143,8 @@ We use a representative 7B model for Self-BioRAG.
 If you want to use another models with difference configuration, you should change directions of recipes.
 
 ```
-conda activate olaph_training
-cd alignment-handbook
-```
+cd alignment-handbook \
 
-```
 CUDA_VISIBLE_DEVICES=0,1,2,3 ACCELERATE_LOG_LEVEL=info accelerate launch \
 --config_file recipes/accelerate_configs/deepspeed_zero3.yaml  \
 --num_processes 4 \
@@ -156,8 +155,6 @@ recipes/selfbiorag_7b/sft/config_full.yaml \
 * Make synthetic preference set based on sampling predictions
 
 ```
-conda activate olaph_inference
-
 export HUGGINGFACE_MODEL_DIR=your_trained_model
 export DATA_NAME=live_qa
 export WODATA_NAME=kqa_golden
@@ -184,11 +181,8 @@ python pred_to_preference.py \
 * Direct Preference Optimization (DPO)
 
 ```
-conda activate olaph_training
-cd alignment-handbook
-```
+cd alignment-handbook \
 
-```
 CUDA_VISIBLE_DEVICES=0,1,2,3 ACCELERATE_LOG_LEVEL=info accelerate launch \
 --config_file recipes/accelerate_configs/deepspeed_zero3.yaml  \
 --num_processes 4 \
