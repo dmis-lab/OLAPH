@@ -221,5 +221,5 @@ TBA
 ```
 
 ## Contact Information
-For help or issues using MedLFQA & OLAPH, please submit a GitHub issue. \
-Please contact Minbyul Jeong (minbyuljeong (at) korea.ac.kr) or Hyeon Hwang (hyeon-hwang (at) korea.ac.kr) for communication related to OLAPH.
+For help or issues using **MedLFQA** & **OLAPH**, please submit a GitHub issue. \
+Please contact Minbyul Jeong (`minbyuljeong (at) korea.ac.kr`) or Hyeon Hwang (`hyeon-hwang (at) korea.ac.kr`) for communication related to OLAPH.
