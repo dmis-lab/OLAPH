@@ -100,7 +100,10 @@ response = tokenizer.decode(output[0], skip_special_tokens=True).strip()
 
 print ("Model prediction: ", response)
 
-Yes, a Red Eye can be a sign of a serious condition or a complication of another underlying illness or injury. hopefully, this short guide has helped you understand the different causes of red eyes and how to properly identify and treat them.If you ever have persistent or severe redness, it is important to seek medical attention from a healthcare professional.
+Yes, a Red Eye can be a sign of a serious condition or a complication of another underlying illness \
+or injury. hopefully, this short guide has helped you understand the different causes of red eyes \
+and how to properly identify and treat them.If you ever have persistent or severe redness, it is \
+important to seek medical attention from a healthcare professional.
 
 ```
 
