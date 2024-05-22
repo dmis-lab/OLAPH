@@ -131,8 +131,8 @@ def main():
     data_names = ["kqa_golden"]
     for data_name in tqdm.tqdm(data_names):
         # Check for last checkpoint
-        training_args.hub_model_id = original_hub_id + f"-wo-{data_name}-iter-dpo-step3-filtered-11"
-        training_args.output_dir = original_output_dir + f"-wo-{data_name}-iter-dpo-step3-filtered-11"
+        training_args.hub_model_id = original_hub_id + f"-wo-{data_name}-iter-dpo-step"
+        training_args.output_dir = original_output_dir + f"-wo-{data_name}-iter-dpo-step"
         
         last_checkpoint = get_checkpoint(training_args)
         if last_checkpoint is not None and training_args.resume_from_checkpoint is None:
@@ -160,8 +160,8 @@ def main():
         # target_dir = model_name.split("-")[0]
 
         # OLAPH training
-        train_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_all_wo_{data_name}_iter-dpo-step3-filtered.jsonl")
-        test_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_{data_name}_iter-dpo-step3-filtered.jsonl")
+        train_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_all_wo_{data_name}_iter-dpo-step.jsonl")
+        test_datasets = load_dataset("json", data_files=f"./predictions/preference_{model_name}_test_{data_name}_iter-dpo-step.jsonl")
         data_args.truncation_side = "left"  # Truncate from left to ensure we don't lose labels in final turn
         tokenizer = get_tokenizer(model_args, data_args)
 
