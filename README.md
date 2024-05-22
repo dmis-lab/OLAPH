@@ -5,6 +5,8 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 
 [MedLFQA]() | [OLAPH Models]() | [Summary]() | [Paper]() 
 
+![](figures/olaph.png)
+
 1) **MedLFQA** is a reconstructed format of long-form question-answering (LFQA) benchmark datasets in biomedical domain to facilitate automatic evaluation.
 2) **OLAPH** is a framework that reduces hallucinations and includes crucial claims by utilizing automatic evaluation to select the best response in sampling predictions and designing to answer questions in preferred manner.
 
