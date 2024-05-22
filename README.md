@@ -2,7 +2,7 @@
 
 This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Question Answering](https://arxiv.org/abs/2405.12701) by Minbyul Jeong, Hyeon Hwang, Chanwoong Yoon, Taewhoo Lee, and Jaewoo Kang.
 
-[MedLFQA](https://huggingface.co/datasets/dmis-lab/MedLFQA) | [Self-BioRAG (OLAPH)](https://huggingface.co/dmis-lab/self-biorag-7b-olaph) | [BioMistral (OLAPH)](https://huggingface.co/dmis-lab/biomistral-7b-olaph) | [Mistral (OLAPH)](https://huggingface.co/dmis-lab/mistral-7b-olaph) | [Summary](https://www.linkedin.com/posts/minbyul-jeong-183000194_introducing-medlfqa-olaph-a-biomedical-activity-7198887412050112512-5eHq?utm_source=share&utm_medium=member_desktop) | [Paper](https://arxiv.org/abs/2405.12701) 
+[MedLFQA](https://huggingface.co/datasets/dmis-lab/MedLFQA) | [Self-BioRAG (OLAPH)](https://huggingface.co/dmis-lab/self-biorag-7b-olaph) | [BioMistral (OLAPH)](https://huggingface.co/dmis-lab/biomistral-7b-olaph) | [Mistral (OLAPH)](https://huggingface.co/dmis-lab/mistral-7b-olaph) | [LLaMA2 (OLAPH)](https://huggingface.co/dmis-lab/llama2-7b-olaph) | [Meditron (OLAPH)](https://huggingface.co/dmis-lab/meditron-7b-olaph) | [Summary](https://www.linkedin.com/posts/minbyul-jeong-183000194_introducing-medlfqa-olaph-a-biomedical-activity-7198887412050112512-5eHq?utm_source=share&utm_medium=member_desktop) | [Paper](https://arxiv.org/abs/2405.12701) 
 
 ![](figures/olaph.png)
 
