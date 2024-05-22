@@ -1,5 +1,4 @@
-# OLAPH
-OLAPH: Improving Factuality in Biomedical Long-form Question Answering
+# OLAPH: Improving Factuality in Biomedical Long-form Question Answering
 
 This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Question Answering](https://arxiv.org/abs/2405.12701) by .
 
