@@ -209,7 +209,17 @@ TBA
 TBA
 
 ## Citation
-TBA
+```
+@misc{jeong2024olaph,
+      title={OLAPH: Improving Factuality in Biomedical Long-form Question Answering}, 
+      author={Minbyul Jeong and Hyeon Hwang and Chanwoong Yoon and Taewhoo Lee and Jaewoo Kang},
+      year={2024},
+      eprint={2405.12701},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
 
 ## Contact Information
-TBA
+For help or issues using MedLFQA & OLAPH, please submit a GitHub issue. \
+Please contact Minbyul Jeong (minbyuljeong (at) korea.ac.kr) or Hyeon Hwang (hyeon-hwang (at) korea.ac.kr) for communication related to OLAPH.
