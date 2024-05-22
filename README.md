@@ -2,7 +2,7 @@
 
 This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Question Answering](https://arxiv.org/abs/2405.12701) by Minbyul Jeong, Hyeon Hwang, Chanwoong Yoon, Taewhoo Lee, and Jaewoo Kang.
 
-[MedLFQA](https://huggingface.co/datasets/dmis-lab/MedLFQA) | [OLAPH Models]() | [Summary](https://www.linkedin.com/posts/minbyul-jeong-183000194_introducing-medlfqa-olaph-a-biomedical-activity-7198887412050112512-5eHq?utm_source=share&utm_medium=member_desktop) | [Paper](https://arxiv.org/abs/2405.12701) 
+[MedLFQA](https://huggingface.co/datasets/dmis-lab/MedLFQA) | [Self-BioRAG (OLAPH)](dmis-lab/self-biorag-7b-olaph) | [BioMistral (OLAPH)](dmis-lab/biomistral-7b-olaph) | [Mistral (OLAPH)](dmis-lab/mistral-7b-olaph) | [Summary](https://www.linkedin.com/posts/minbyul-jeong-183000194_introducing-medlfqa-olaph-a-biomedical-activity-7198887412050112512-5eHq?utm_source=share&utm_medium=member_desktop) | [Paper](https://arxiv.org/abs/2405.12701) 
 
 ![](figures/olaph.png)
 
@@ -87,7 +87,7 @@ You can download 7B models trained with our OLAPH framework from HuggingFace hub
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model_name = "" # ["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"]
+model_name = "dmis-lab/self-biorag-olaph" # ["mistralai/Mistral-7B-v0.1", "BioMistral/BioMistral-7B", "meta-llama/Llama-2-7b-hf", "dmis-lab/selfbiorag_7b", "epfl-llm/meditron-7b"]
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
