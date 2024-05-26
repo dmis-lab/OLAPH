@@ -216,13 +216,11 @@ TBA
 
 ## Citation
 ```
-@misc{jeong2024olaph,
-      title={OLAPH: Improving Factuality in Biomedical Long-form Question Answering}, 
-      author={Minbyul Jeong and Hyeon Hwang and Chanwoong Yoon and Taewhoo Lee and Jaewoo Kang},
-      year={2024},
-      eprint={2405.12701},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@article{jeong2024olaph,
+  title={OLAPH: Improving Factuality in Biomedical Long-form Question Answering},
+  author={Jeong, Minbyul and Hwang, Hyeon and Yoon, Chanwoong and Lee, Taewhoo and Kang, Jaewoo},
+  journal={arXiv preprint arXiv:2405.12701},
+  year={2024}
 }
 ```
 
