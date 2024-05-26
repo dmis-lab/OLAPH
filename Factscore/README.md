@@ -29,20 +29,27 @@ This command doe downloads the knowledg source (wikipedia dump) and example data
 
 ## Preprocess a prediction file
 ```bash
-python preprocess.py --input_file {input_file} --output_file {output_file} --top_k {top_k}
+python preprocess.py \
+--input_file {input_file} \
+--output_file {output_file} \
+--top_k {top_k} \
 ```
 
 - `--input_file`: The path to the prediction file to be processed.
 - `--output_file`: The path where the preprocessed file will be saved.
 - `--top_k`: The number of top results to measure using biomedical texts. Default is 20.
-- `--evidence_file`: The path to the evidence file. Default is `kqa_golden_test_evidence_factscore.josnl`
+- `--evidence_file`: The path to the evidence file. Default is `kqa_golden_test_evidence_factscore.jsonl`.
 
 ## Running FActScore using a command line
 
 We expect running FActScore costs about $1 of the API cost per 100 sentences. For instance, if you have 100 generations, each with 5 sentences on average, it costs $5 in total.
 
 ```bash
-python -m factscore.factscorer --input_path {input_path} --model_name {estimator_name} --openai_key {openai_key} --knowledge_source {knowledge_source}
+python -m factscore.factscorer \
+--input_path {input_path} \
+--model_name {estimator_name} \
+--openai_key {openai_key} \
+--knowledge_source {knowledge_source} \
 ```
 
 - `--input_path`: The path to the preprocessed prediction file.
