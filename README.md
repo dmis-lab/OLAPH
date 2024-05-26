@@ -208,8 +208,8 @@ Our iterative learning consists of the following processes \
 - DPO - Sampling predictions (pdata_collection.py) - Make preference set (pred_to_preference.py) \
 - DPO 
 
-## FactScore
-TBA
+## FActScore
+We provide detail experimental settings and results in [FActScore](Factscore).
 
 ## FAQ
 TBA
