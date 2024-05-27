@@ -201,11 +201,11 @@ recipes/selfbiorag_7b/sft/config_full.yaml \
 We train and generate sampling predictions through separate files and do several times.
 In future, we will provide the processes execution in one simple bash file.
 
-Our iterative learning consists of the following processes \
-- Sampling predictions (`pdata_collection.py`) - Make SFT set (`pred_to_sft.py`) \
-- SFT (`alignment-handboook/sft.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`) \
-- DPO (`alignment-handboook/dpo.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`) \
-- DPO (`alignment-handboook/dpo.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`) \
+Our iterative learning consists of the following processes
+- Sampling predictions (`pdata_collection.py`) - Make SFT set (`pred_to_sft.py`)
+- SFT (`alignment-handboook/sft.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`)
+- DPO (`alignment-handboook/dpo.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`)
+- DPO (`alignment-handboook/dpo.sh`) - Sampling predictions (`pdata_collection.py`) - Make preference set (`pred_to_preference.py`)
 - DPO (`alignment-handboook/dpo.sh`)
 
 ## FActScore
