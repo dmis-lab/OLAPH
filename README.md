@@ -169,7 +169,6 @@ export WODATA_NAME=kqa_golden
 python pred_to_preference.py \
 --model_name ${HUGGINGFACE_MODEL_DIR} \
 --wodata_name ${WODATA_NAME} \
---data_names live_qa+medication_qa+healthsearch_qa+kqa_golden+kqa_silver_wogold \
 --alpha 1.0 \
 --beta 1.0 \
 --gamma 1.0 \
