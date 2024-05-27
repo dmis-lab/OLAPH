@@ -40,15 +40,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b")
     parser.add_argument('--wodata_name', type=str, default="kqa_golden")
-    parser.add_argument('--data_names', type=str, split="+", default="live_qa+medication_qa+healthsearch_qa+kqa_silver_wogold+kqa_golden")
+    parser.add_argument('--data_names', nargs='+', default="live_qa medication_qa healthsearch_qa kqa_silver_wogold kqa_golden")
     parser.add_argument('--alpha', type=int, default=1)
     parser.add_argument('--beta', type=int, default=1)
     parser.add_argument('--gamma', type=int, default=1)
     parser.add_argument('--threshold', type=int, default=200)
     args = parser.parse_args()
+    data_names = args.data_names.split(" ")
 
     examples = []
-    
     if "selfbiorag" in args.model_name_or_path.lower():
         model_name = "selfbiorag-7b"
     elif "biomistral" in args.model_name_or_path.lower():
@@ -63,9 +63,6 @@ def main():
         model_name = args.model_name_or_path.split("/")[1]
 
     wodata_name = args.wodata_name
-    # data_names = ["live_qa", "medication_qa", "healthsearch_qa", "kqa_silver_wogold", "kqa_golden"]
-    data_names = args.data_names
-    # data_names = ["kqa_golden"]
     
     for data_name in data_names:
         if len(data_names) == 1:
@@ -160,12 +157,12 @@ def main():
             continue
             
     if len(data_names) == 1:
-        with open(f"./predictions/preference_{model_name}_test_{target_data_name}_iter-dpo-step.jsonl", "a") as out_:
+        with open(f"./predictions/preference_{model_name}_test_{target_data_name}_iter-dpo-step.jsonl", "w") as out_:
             for inst in new_examples:
                 out_.write(json.dumps(inst))
                 out_.write("\n")
     else:
-        with open(f"./predictions/preference_{model_name}_test_all_wo_{wodata_name}_iter-dpo-step.jsonl", "a") as out_:
+        with open(f"./predictions/preference_{model_name}_test_all_wo_{wodata_name}_iter-dpo-step.jsonl", "w") as out_:
             for inst in new_examples:
                 out_.write(json.dumps(inst))
                 out_.write("\n")

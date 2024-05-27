@@ -9,13 +9,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b")
     parser.add_argument('--wodata_name', type=str, default="kqa_golden")
-    parser.add_argument('--data_names', type=str, split="+", default="live_qa+medication_qa+healthsearch_qa+kqa_silver_wogold+kqa_golden")
+    parser.add_argument('--data_names', nargs='+', default="live_qa medication_qa healthsearch_qa kqa_silver_wogold kqa_golden")
     parser.add_argument('--alpha', type=int, default=1)
     parser.add_argument('--beta', type=int, default=1)
     parser.add_argument('--gamma', type=int, default=1)
     parser.add_argument('--threshold', type=int, default=200)
     args = parser.parse_args()
-
+    args.data_names = args.data_names.split(" ")
+    
     if "selfbiorag" in args.model_name_or_path.lower():
         model_name = "selfbiorag-7b"
     elif "biomistral" in args.model_name_or_path.lower():
@@ -29,13 +30,12 @@ def main():
     else:
         model_name = args.model_name_or_path.split("/")[1]
 
-    # args.data_names = ["live_qa", "medication_qa", "healthsearch_qa", "kqa_golden", "kqa_silver_wogold"]
-    # args.wodata_name = "kqa_silver_wogold"
     all_datasets = []
     for data_name in args.data_names:
         if data_name == args.wodata_name:
             continue
         alls = []
+        
         with open(f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
             for line in fp.readlines():
                 dictionary = json.loads(line)
