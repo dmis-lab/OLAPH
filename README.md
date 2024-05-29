@@ -34,6 +34,7 @@ Then, we install the remaining package dependencies as follows:
 
 ```
 conda create -n olaph python=3.10
+conda activate olaph
 cd ./alignment-handbook/ \
 python -m pip install .
 ```
@@ -51,21 +52,21 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvi
 You will need Flash Attention 2 installed \
 
 ```
-python -m pip install flash-attn==2.5.6 --no-build-isolation \
+python -m pip install flash-attn==2.5.6 --no-build-isolation
 ```
 
 We need further requirments to install for automatic evaluation or vllm for boosting inference speed \
 ```
-pip install -r requirements.txt --no-build-isolation \
-pip install git+https://github.com/lucadiliello/bleurt-pytorch.git \
+pip install -r requirements.txt --no-build-isolation
+pip install git+https://github.com/lucadiliello/bleurt-pytorch.git
 ```
 
 Also, you will need to log into your Huggingface account (make sure your account token should be in WRITE status)
 Then, install the Git LFS to upload your models as follows:
 
 ```
-huggingface-cli login \
-sudo apt-get install git-lfs \
+huggingface-cli login
+sudo apt-get install git-lfs
 ```
 <!-- 
 For training,
