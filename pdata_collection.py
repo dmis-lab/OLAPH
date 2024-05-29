@@ -350,7 +350,7 @@ def main():
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
     
-    for inst_idx ,inst in enumerate(train_examples):
+    for inst_idx ,inst in enumerate(train_examples[:10]):
         # query
         query = prompt + inst['Question']
         
@@ -405,7 +405,7 @@ def main():
             nli_tokenizer = AutoTokenizer.from_pretrained('gsarti/biobert-nli') #gsarti/biobert-nli
 
         prediction_scores = []
-        for sample_idx,sample in enumerate(sample_predictions[:10]):
+        for sample_idx,sample in enumerate(sample_predictions):
             sample = sample.strip()
             rouge1, rouge2, rougel = ROUGESCORE(sample, inst['Free_form_answer']) # higher better
             bleurt = BLEURT(sample, inst['Free_form_answer'], model=bleurt_model, tokenizer=bleurt_tokenizer) # higher better
