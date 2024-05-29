@@ -200,6 +200,14 @@ recipes/selfbiorag_7b/sft/config_full.yaml \
 ```
 
 ## Iterative Learning
+**Note that you should convert two things as follows:**
+
+**1. convert without dataset name in scripts/run_sft.py and scripts/run_dpo.py**
+
+**2. convert model_name_or_path in config file for iterative training**
+
+**We knew that iteartive learning is uncomfortable to follow, thus we try to fix it as soon as possible.**
+
 We train and generate sampling predictions through separate files and do several times.
 In future, we will provide the processes execution in one simple bash file.
 
