@@ -339,16 +339,16 @@ def main():
     eval_name = args.eval_data
     train_examples = []
     
-    if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
-        filename = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
-        with open(filename, 'r') as fp:
-            for line in fp.readlines():
-                train_examples.append(json.loads(line))
-    else:
-        filename = f"./MedLFQA/{eval_name}_test_MedLFQA.jsonl"
-        with open(filename, 'r') as fp:
-            for line in fp.readlines():
-                train_examples.append(json.loads(line))
+    # if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
+    #     filename = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
+    #     with open(filename, 'r') as fp:
+    #         for line in fp.readlines():
+    #             train_examples.append(json.loads(line))
+    # else:
+    filename = f"./MedLFQA/{eval_name}_test_MedLFQA.jsonl"
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            train_examples.append(json.loads(line))
     
     for inst_idx ,inst in enumerate(train_examples):
         # query
