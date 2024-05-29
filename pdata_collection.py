@@ -350,7 +350,7 @@ def main():
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
     
-    for inst_idx ,inst in enumerate(train_examples[:10]):
+    for inst_idx ,inst in enumerate(train_examples):
         # query
         query = prompt + inst['Question']
         
