@@ -71,7 +71,8 @@ def main():
                     if best_answer:
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
-                        wo_datasets.append({"text":f"Question: {dictionary['Question']}\n ### Answer: {best_answer}"})
+                        wo_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        wo_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
                     else:
                         continue
         else:
@@ -83,7 +84,8 @@ def main():
                     if best_answer:
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
-                        all_datasets.append({"text":f"Question: {dictionary['Question']}\n ### Answer: {best_answer}"})
+                        all_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        all_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
                     else:
                         continue
                 
