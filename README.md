@@ -116,6 +116,7 @@ We provide the reconstructed datasets for automatic evaluation of long-form gene
 ## Inference
 
 * Sampling Predictions (Including Automatic Evaluation)
+**Note that you have to generate all predictions of MedLFQA datasets to proceed further SFT and DPO training.**
 
 ```
 # For first sampling predictions \ 
