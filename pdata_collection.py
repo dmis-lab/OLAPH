@@ -308,8 +308,8 @@ def main():
     parser.add_argument('--repetition_penalty', type=float, default=1.0)
     args = parser.parse_args()
 
-    if not os.path.exists("./predictions"):
-        os.mkdir("./predictions")
+    if not os.path.exists("./alignment-handbook/predictions"):
+        os.mkdir("./alignment-handbook/predictions")
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -339,8 +339,8 @@ def main():
     eval_name = args.eval_data
     train_examples = []
     
-    if os.path.exists(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
-        filename = f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
+    if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
+        filename = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
@@ -422,12 +422,12 @@ def main():
         if (inst_idx+1) % 5 == 0:
             print (inst)
             
-            with open(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
+            with open(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
                 for inst in train_examples:
                     outfile.write(json.dumps(inst))
                     outfile.write("\n")
 
-    with open(f"./predictions/pdata_{model_name}_{eval_name}_sampling.jsonl", "w") as outfile:
+    with open(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl", "w") as outfile:
         for inst in train_examples:
             outfile.write(json.dumps(inst))
             outfile.write("\n")

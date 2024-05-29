@@ -95,12 +95,12 @@ def main():
     # load bio LFQA dataset
     original_hub_id = training_args.hub_model_id
     original_output_dir = training_args.output_dir
-    # data_names = ["live_qa", "medication_qa", "healthsearch_qa", "kqa_golden", "kqa_silver_wogold"]
-    data_name = "live_qa"
+    wodata_name = "kqa_golden"
 
     # Check for last checkpoint
-    training_args.hub_model_id = original_hub_id + f"-wo-{data_name}-iter-sft-step1"
-    training_args.output_dir = original_output_dir + f"-wo-{data_name}-iter-sft-step1"
+    training_args.hub_model_id = original_hub_id + f"-wo-{wodata_name}-iter-sft-step1"
+    training_args.output_dir = original_output_dir + f"-wo-{wodata_name}-iter-sft-step1"
+
     ################
     # Load tokenizer
     ################
@@ -120,9 +120,8 @@ def main():
     # model_name = training_args.output_dir.split("/")[1].split("-")[0]
     all_datasets = []
 
-    pdata_{model_name}_{eval_name}_sampling.jsonl_tmp
-    train_datasets = load_dataset("json", data_files=f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl")
-    test_datasets = load_dataset("json", data_files=f"./predictions/pdata_{data_name}_sampling.jsonl")
+    train_datasets = load_dataset("json", data_files=f"./predictions/{model_name}_wo-{wodata_name}_train_iter_sft_step1.jsonl")
+    test_datasets = load_dataset("json", data_files=f"./predictions/{model_name}_wo-{wodata_name}_test_iter_sft_step1.jsonl")
     
     data_args.truncation_side = "left"  # Truncate from left to ensure we don't lose labels in final turn
     tokenizer = get_tokenizer(model_args, data_args)

@@ -87,12 +87,12 @@ def main():
                     else:
                         continue
                 
-    with open(f"./predictions/{model_name}_wo-{args.wodata_name}_train_iter_sft_step1.jsonl", "w") as out_:
+    with open(f"./alignment-handbook/predictions/{model_name}_wo-{args.wodata_name}_train_iter_sft_step1.jsonl", "w") as out_:
         for inst in all_datasets:
             out_.write(json.dumps(inst))
             out_.write("\n")
     
-    with open(f"./predictions/{model_name}_wo-{args.wodata_name}_test_iter_sft_step1.jsonl", "w") as out_:
+    with open(f"./alignment-handbook/predictions/{model_name}_wo-{args.wodata_name}_test_iter_sft_step1.jsonl", "w") as out_:
         for inst in wo_datasets:
             out_.write(json.dumps(inst))
             out_.write("\n")
