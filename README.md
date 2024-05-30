@@ -12,6 +12,9 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 
 2) **OLAPH** is a framework that reduces hallucinations and includes crucial claims by utilizing automatic evaluation to select the best response in sampling predictions and designing to answer questions in preferred manner.
 
+![](figures/model_figure.png)
+
+
 ## Content
 1. [Installation](#installation)
 2. [Quick Usage](#quick-usage)
@@ -116,8 +119,6 @@ important to seek medical attention from a healthcare professional.
 We construct the **MedLFQA** with four biomedical LFQA benchmark datasets: [LiveQA](https://github.com/abachaa/LiveQA_MedicalTask_TREC2017), [MedicationQA](https://github.com/abachaa/Medication_QA_MedInfo2019), [HealthSearchQA](https://huggingface.co/datasets/katielink/healthsearchqa), and [K-QA](https://github.com/Itaymanes/K-QA).
 Our **MedLFQA** instance is comprised of four components: question (Q), long-form answer (A), Must Have Statements (MH), Nice to Have Statements (NH).
 We provide the reconstructed datasets for automatic evaluation of long-form generated responses.
-
-![](figures/model_figure.png)
 
 ## Inference
 
