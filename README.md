@@ -15,8 +15,7 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 ![](figures/model_figure.png)
 
 ## Updates
-\[**May 30, 2024**\] update the codes to train and inference for Llama-3-8b and Llama-3-8b-Instruct.
-
+\[**May 30, 2024**\] update the codes to train and inference for Llama-3-8b and Llama-3-8b-Instruct. \
 \[**May 23, 2024**\] **OLAPH** has been released.
 
 ## Content
