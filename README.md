@@ -6,7 +6,7 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 
 ![](figures/olaph.png)
 
-1) **MedLFQA** is a reconstructed format of long-form question-answering (LFQA) benchmark datasets in biomedical domain to facilitate automatic evaluation.
+1) **MedLFQA** is a reconstructed format of long-form question-answering (LFQA) benchmark datasets in biomedical domain to facilitate automatic evaluation especially factuality (e.g., hallucination & comprehensiveness).
 
 ![](figures/motivation.png)
 
@@ -14,6 +14,9 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 
 ![](figures/model_figure.png)
 
+## Updates
+\[**May 30, 2024**\] update the codes to train and inference for Llama-3-8b and Llama-3-8b-Instruct.
+\[**May 23, 2024**\] **OLAPH** has been released.
 
 ## Content
 1. [Installation](#installation)
