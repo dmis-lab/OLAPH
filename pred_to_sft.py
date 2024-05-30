@@ -52,10 +52,16 @@ def main():
         model_name = "biomistral-7b"
     elif "mistral" in args.model_name_or_path.lower():
         model_name = "mistral-7b"
-    elif "llama" in args.model_name_or_path.lower():
+    elif "llama-2" in args.model_name_or_path.lower():
         model_name = "llama2-7b"
+    elif "llama-3-8b-instruct" in args.model_name_or_path.lower():
+        model_name = "llama3-8b-instruct"
+    elif "llama-3" in args.model_name_or_path.lower():
+        model_name = "llama3-8b"
     elif "meditron" in args.model_name_or_path.lower():
         model_name = "meditron-7b"
+    elif "gemma" in args.model_name_or_path.lower():
+        model_name = "gemma-7b"
     else:
         model_name = args.model_name_or_path.split("/")[1]
 
@@ -71,6 +77,8 @@ def main():
                     if best_answer:
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
+                        # update at 24.05.29
+                        # wo_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
                         wo_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
                         wo_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
                     else:
@@ -84,6 +92,8 @@ def main():
                     if best_answer:
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
+                        # update at 24.05.29
+                        # all_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
                         all_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
                         all_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
                     else:
