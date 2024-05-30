@@ -143,8 +143,8 @@ def HALLUCINATION(query, pred, must_have, nice_to_have, use_gpt=False, model=Non
                 input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
                 return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
         
-            # encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt').to(device)
-            encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt') # no gpu
+            encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt').to(device)
+            # encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt') # no gpu
             with torch.no_grad():
                 model_output = model(**encoded_input)
             
@@ -191,8 +191,8 @@ def COMPREHENSIVENESS(query, pred, must_have, use_gpt=False, model=None, tokeniz
                 input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
                 return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
-            # encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt').to(device)
-            encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt') # no gpu
+            encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt').to(device)
+            # encoded_input = tokenizer([pred, statement], padding=True, truncation=True, max_length=512, return_tensors='pt') # no gpu
             with torch.no_grad():
                 model_output = model(**encoded_input)
             sentence_embeddings = mean_pooling(model_output, encoded_input['attention_mask'])
@@ -319,15 +319,21 @@ def main():
         model_name = "biomistral-7b"
     elif "mistral" in args.model_name_or_path.lower():
         model_name = "mistral-7b"
-    elif "llama" in args.model_name_or_path.lower():
+    elif "llama-2" in args.model_name_or_path.lower():
         model_name = "llama2-7b"
+    elif "llama-3-8b-instruct" in args.model_name_or_path.lower():
+        model_name = "llama3-8b-instruct"
+    elif "llama-3" in args.model_name_or_path.lower():
+        model_name = "llama3-8b"
     elif "meditron" in args.model_name_or_path.lower():
         model_name = "meditron-7b"
+    elif "gemma" in args.model_name_or_path.lower():
+        model_name = "gemma-7b"
     else:
         model_name = args.model_name_or_path.split("/")[1]
 
     if "meditron" in args.model_name_or_path.lower() or "llama" in args.model_name_or_path.lower() or "mistral" in args.model_name_or_path.lower():
-        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, torch_dtype=torch.float16).to(device)
+        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, torch_dtype=args.dtype).to(device)
         tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, padding_side="left")
     else:
         model = LLM(model=args.model_name_or_path, download_dir=args.download_dir,
@@ -363,7 +369,7 @@ def main():
 
         # ten generation to make preference collections - check hallucination
         sample_predictions = []
-        if "meditron-7b" in args.model_name_or_path.lower() or "llama2-7b" in args.model_name_or_path.lower() or "mistral-7b" in args.model_name_or_path.lower():
+        if "meditron-7b" == model_name or "llama2-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
             input_ids = tokenizer.encode(query, return_tensors="pt").to(device)
             output = model.generate(input_ids, max_length=512, no_repeat_ngram_size=2, do_sample=False, top_p=1.0, repetition_penalty=args.repetition_penalty).to(device)
             response = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -376,7 +382,32 @@ def main():
                 response = tokenizer.decode(output[0], skip_special_tokens=True)
                 pred = response[len(query):].strip()
                 sample_predictions.append(pred)
+        elif "llama3-8b-instruct" == model_name:
+            messages = [
+                {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+                {"role": "user", "content": query},
+            ]
 
+            input_ids = tokenizer.apply_chat_template(
+                messages,
+                add_generation_prompt=True,
+                return_tensors="pt"
+            ).to(model.device)
+
+            terminators = [
+                tokenizer.eos_token_id,
+                tokenizer.convert_tokens_to_ids("<|eot_id|>")
+            ]
+            outputs = model.generate(input_ids, max_new_tokens=512, eos_token_id=terminators, do_sample=False, temperature=0.0, top_p=0.9)
+            response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            pred = response[len(query):].strip()
+            sample_predictions.append(pred)
+
+            for _ in range(args.sampling_trials):
+                outputs = model.generate(input_ids, max_new_tokens=512, eos_token_id=terminators, do_sample=True, temperature=0.6, top_p=0.9)
+                response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+                pred = response[len(query):].strip()
+                sample_predictions.append(pred)
         else:
             if "selfbiorag" in args.model_name_or_path:
                 query += "[No Retrieval]"
@@ -400,8 +431,8 @@ def main():
 
         # load nli model for hallucination and comprehensiveness
         if not args.use_gpt:
-            # nli_model = AutoModel.from_pretrained('gsarti/biobert-nli', max_length=512).to(device)
-            nli_model = AutoModel.from_pretrained('gsarti/biobert-nli', max_length=512) # no gpu
+            nli_model = AutoModel.from_pretrained('gsarti/biobert-nli', max_length=512).to(device)
+            # nli_model = AutoModel.from_pretrained('gsarti/biobert-nli', max_length=512) # no gpu
             nli_tokenizer = AutoTokenizer.from_pretrained('gsarti/biobert-nli') #gsarti/biobert-nli
 
         prediction_scores = []
