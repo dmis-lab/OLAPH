@@ -333,7 +333,7 @@ def main():
         model_name = args.model_name_or_path.split("/")[1]
 
     if "meditron" in args.model_name_or_path.lower() or "llama" in args.model_name_or_path.lower() or "mistral" in args.model_name_or_path.lower():
-        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, torch_dtype=args.dtype).to(device)
+        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, torch_dtype=torch.bfloat16).to(device)
         tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, padding_side="left")
     else:
         model = LLM(model=args.model_name_or_path, download_dir=args.download_dir,
@@ -408,6 +408,7 @@ def main():
                 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
                 pred = response[len(query):].strip()
                 sample_predictions.append(pred)
+
         else:
             if "selfbiorag" in args.model_name_or_path:
                 query += "[No Retrieval]"
