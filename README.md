@@ -15,7 +15,7 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 ![](figures/model_figure.png)
 
 ## Updates
-\[**May 31, 2024**\] Introducing [OLAPH](https://www.youtube.com/watch?v=IQd39sYOprI) in youtube (korean version)! 
+\[**May 31, 2024**\] Introducing [OLAPH](https://www.youtube.com/watch?v=IQd39sYOprI) in youtube (korean version)! \
 \[**May 30, 2024**\] update the codes to train and inference for [Gemma-7b](https://huggingface.co/google/gemma-7b), [Llama-3-8b](https://huggingface.co/meta-llama/Meta-Llama-3-8B), and [Llama-3-8b-Instruct](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct). \
 \[**May 23, 2024**\] **OLAPH** has been released.
 
