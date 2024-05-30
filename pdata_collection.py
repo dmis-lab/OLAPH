@@ -294,7 +294,7 @@ def main():
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b") # mistralai/Mistral-7B-v0.1, BioMistral/BioMistral-7B, meta-llama/Llama-2-7b-hf, dmis-lab/selfbiorag_7b, epfl-llm/meditron-7b
     parser.add_argument('--max_length', type=int, default=2048)
     parser.add_argument('--download_dir', type=str, help="specify vllm model download dir",
-                        default="./") # need change
+                        default="./ssd0/minbyul/cache/") # need change
     parser.add_argument('--max_new_tokens', type=int, default=512)
     parser.add_argument("--world_size",  type=int, default=1,
                         help="world size to use multiple GPUs.")
