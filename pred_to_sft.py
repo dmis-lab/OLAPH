@@ -69,7 +69,7 @@ def main():
     wo_datasets = []
     for data_name in args.data_names:
         if data_name == args.wodata_name:
-            with open(f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
+            with open(f"./alignment-handbook/predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
                 for line in fp.readlines():
                     make_data = []
                     dictionary = json.loads(line)
@@ -87,7 +87,7 @@ def main():
                     else:
                         continue
         else:
-            with open(f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
+            with open(f"./alignment-handbook/predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
                 for line in fp.readlines():
                     make_data = []
                     dictionary = json.loads(line)
