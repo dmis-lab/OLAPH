@@ -79,11 +79,10 @@ def main():
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
                         # update at 24.05.29
-                        # wo_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
-                        make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
-                        make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
-
-                        wo_datasets.append(make_data)
+                        wo_datasets.append({"text": f"Question: {dictionary['Question']} \n ### Answer: {best_answer}"})
+                        # make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        # make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+                        # wo_datasets.append(make_data)
                     else:
                         continue
         else:
@@ -97,11 +96,10 @@ def main():
                         if "### Answer:" in best_answer:
                             best_answer = best_answer.split("### Answer:")[1].strip()
                         # update at 24.05.29
-                        # all_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
-                        make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
-                        make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
-
-                        all_datasets.append(make_data)
+                        all_datasets.append({"text": f"Question: {dictionary['Question']} \n ### Answer: {best_answer}"})
+                        # make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        # make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+                        # all_datasets.append(make_data)
                     else:
                         continue
                 
