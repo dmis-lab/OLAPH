@@ -15,7 +15,9 @@ from vllm import LLM, SamplingParams
 from peft import PeftModel, PeftConfig
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
 from bleurt_pytorch import BleurtConfig, BleurtForSequenceClassification, BleurtTokenizer
-    
+
+from nltk.translate.gleu_score import sentence_gleu # 24.05.31 update - fluency of prediction compared to long-form answer
+
 # from openai.error import APIError, Timeout, APIConnectionError
 
 # openai.api_key_path = "./key.txt"
@@ -204,10 +206,6 @@ def COMPREHENSIVENESS(query, pred, must_have, use_gpt=False, model=None, tokeniz
     return comp_cnt / len(must_have) * 100
     
 
-def response():
-    pass
-
-
 def vllm_infer(client, tokenizer, prompt, stop_seq, max_new_tokens=1024, cot=False, temperature=0.0):
     """
     Generates a single output for a given input prompt using the VLLM backend (offline mode).
@@ -294,7 +292,7 @@ def main():
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b") # mistralai/Mistral-7B-v0.1, BioMistral/BioMistral-7B, meta-llama/Llama-2-7b-hf, dmis-lab/selfbiorag_7b, epfl-llm/meditron-7b
     parser.add_argument('--max_length', type=int, default=2048)
     parser.add_argument('--download_dir', type=str, help="specify vllm model download dir",
-                        default="./") # need change
+                        default="./ssd0/minbyul/cache/") # need change
     parser.add_argument('--max_new_tokens', type=int, default=512)
     parser.add_argument("--world_size",  type=int, default=1,
                         help="world size to use multiple GPUs.")
@@ -442,12 +440,15 @@ def main():
             rouge1, rouge2, rougel = ROUGESCORE(sample, inst['Free_form_answer']) # higher better
             bleurt = BLEURT(sample, inst['Free_form_answer'], model=bleurt_model, tokenizer=bleurt_tokenizer) # higher better
             bs_p, bs_r, bs_f1 = BERTSCORE(sample, inst['Free_form_answer']) # higher better
-            
+
             # hallucination and comprehensiveneess with gpt-4 or biobert-nli model
             hall_score = HALLUCINATION(inst["Question"], sample, inst["Must_have"], inst["Nice_to_have"], use_gpt=args.use_gpt, model=nli_model, tokenizer=nli_tokenizer, device=device) # lower better
             comp_score = COMPREHENSIVENESS(inst["Question"], sample, inst["Must_have"], use_gpt=args.use_gpt, model=nli_model, tokenizer=nli_tokenizer, device=device) # higher better
 
-            prediction_scores.append({"idx":sample_idx, "rouge1_p":round(rouge1.precision, 4), "rouge1_r": round(rouge1.recall, 4), "rouge1_f1": round(rouge1.fmeasure, 4), "rouge2_p": round(rouge2.precision, 4), "rouge2_r": round(rouge2.recall, 4), "rouge2_f1": round(rouge2.fmeasure, 4), "rougel_p": round(rougel.precision, 4), "rougel_r": round(rougel.recall, 4), "rougel_f1": round(rougel.fmeasure, 4), "bleurt": round(bleurt[0], 4), "bert_score_p": round(bs_p, 4), "bert_score_r": round(bs_r, 4), "bert_score_f1": round(bs_f1, 4), "hallucination": hall_score, "comprehensive": comp_score})
+            # 24.05.31 update - fluency
+            fluency_score = sentence_gleu([answer], sample)
+
+            prediction_scores.append({"idx":sample_idx, "rouge1_p":round(rouge1.precision, 4), "rouge1_r": round(rouge1.recall, 4), "rouge1_f1": round(rouge1.fmeasure, 4), "rouge2_p": round(rouge2.precision, 4), "rouge2_r": round(rouge2.recall, 4), "rouge2_f1": round(rouge2.fmeasure, 4), "rougel_p": round(rougel.precision, 4), "rougel_r": round(rougel.recall, 4), "rougel_f1": round(rougel.fmeasure, 4), "bleurt": round(bleurt[0], 4), "bert_score_p": round(bs_p, 4), "bert_score_r": round(bs_r, 4), "bert_score_f1": round(bs_f1, 4), "hallucination": hall_score, "comprehensive": comp_score, "fluency": round(fluency_score, 4)})
         
         inst['prediction_scores'] = prediction_scores
 

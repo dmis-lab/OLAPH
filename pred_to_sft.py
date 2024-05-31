@@ -71,6 +71,7 @@ def main():
         if data_name == args.wodata_name:
             with open(f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
                 for line in fp.readlines():
+                    make_data = []
                     dictionary = json.loads(line)
                     # find a best answer through the score of automatic evaluation
                     best_answer = auto_eval(dictionary, alpha=args.alpha, beta=args.beta, gamma=args.gamma) 
@@ -79,13 +80,16 @@ def main():
                             best_answer = best_answer.split("### Answer:")[1].strip()
                         # update at 24.05.29
                         # wo_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
-                        wo_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
-                        wo_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+                        make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+
+                        wo_datasets.append(make_data)
                     else:
                         continue
         else:
             with open(f"./predictions/pdata_{model_name}_{data_name}_sampling.jsonl") as fp:
                 for line in fp.readlines():
+                    make_data = []
                     dictionary = json.loads(line)
                     # find a best answer through the score of automatic evaluation
                     best_answer = auto_eval(dictionary, alpha=args.alpha, beta=args.beta, gamma=args.gamma) 
@@ -94,8 +98,10 @@ def main():
                             best_answer = best_answer.split("### Answer:")[1].strip()
                         # update at 24.05.29
                         # all_datasets.append({"text": f"Question: {dictionary['Question'] \n ### Answer: {best_answer}}"})
-                        all_datasets.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
-                        all_datasets.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+                        make_data.append({"content":f"Question: {dictionary['Question']}", "role":"user"})
+                        make_data.append({"content":f"Answer: {best_answer}", "role":"assistant"})
+
+                        all_datasets.append(make_data)
                     else:
                         continue
                 
