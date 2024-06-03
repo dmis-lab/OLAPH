@@ -176,7 +176,7 @@ recipes/selfbiorag_7b/sft/config_full.yaml \
 
 ```
 export HUGGINGFACE_MODEL_DIR=your_trained_model
-export DATA_NAME=live_qa
+export DATA_NAME=kqa_golden
 export WODATA_NAME=kqa_golden
 
 python pred_to_preference.py \
