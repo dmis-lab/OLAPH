@@ -232,7 +232,7 @@ Our iterative learning consists of the following processes
 We provide detail experimental settings and results in [FActScore](Factscore).
 
 ## FAQ
-**1. Providing each step sampling results?**
+**1. Providing each step sampling & SFT & DPO results?**
 
 A. We provide sampling results of every 7B models in the following folder `alignment-handbook/predictions/`.
 
