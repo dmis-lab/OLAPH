@@ -302,6 +302,7 @@ def main():
                         help="sampling_trials to derive sampled predictions")
     parser.add_argument("--use_gpt", action="store_true", help="use gpt-4 with openai key")
     parser.add_argument("--eval_data", type=str, default="")
+    parser.add_argument("--wodata_name", type=str, default="")
     parser.add_argument('--data_size', type=str, default="")
     parser.add_argument('--repetition_penalty', type=float, default=1.0)
     args = parser.parse_args()
@@ -343,8 +344,8 @@ def main():
     eval_name = args.eval_data
     train_examples = []
     
-    if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"):
-        filename = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
+    if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"):
+        filename = f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
@@ -357,7 +358,8 @@ def main():
     for inst_idx ,inst in enumerate(train_examples):
         # query
         query = prompt + inst['Question']
-        
+        answer = inst['Free_form_answer']
+
         # add question mark
         if query[-1] != "?":
             query += "?"
@@ -367,7 +369,7 @@ def main():
 
         # ten generation to make preference collections - check hallucination
         sample_predictions = []
-        if "meditron-7b" == model_name or "llama2-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
+        if "meditron-7b" == model_name or "llama2-7b" == model_name or "biomistral-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
             input_ids = tokenizer.encode(query, return_tensors="pt").to(device)
             output = model.generate(input_ids, max_length=512, no_repeat_ngram_size=2, do_sample=False, top_p=1.0, repetition_penalty=args.repetition_penalty).to(device)
             response = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -455,12 +457,12 @@ def main():
         if (inst_idx+1) % 5 == 0:
             print (inst)
             
-            with open(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
+            with open(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
                 for inst in train_examples:
                     outfile.write(json.dumps(inst))
                     outfile.write("\n")
 
-    with open(f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl", "w") as outfile:
+    with open(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl", "w") as outfile:
         for inst in train_examples:
             outfile.write(json.dumps(inst))
             outfile.write("\n")

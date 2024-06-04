@@ -3,4 +3,5 @@ backoff
 rouge-score
 chardet
 bert-score
+wandb
 transformers==4.38.2
