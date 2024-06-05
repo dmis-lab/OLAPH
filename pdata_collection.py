@@ -15,7 +15,7 @@ from vllm import LLM, SamplingParams
 from peft import PeftModel, PeftConfig
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
 from bleurt_pytorch import BleurtConfig, BleurtForSequenceClassification, BleurtTokenizer
-
+    
 from nltk.translate.gleu_score import sentence_gleu # 24.05.31 update - fluency of prediction compared to long-form answer
 
 # from openai.error import APIError, Timeout, APIConnectionError
@@ -206,6 +206,10 @@ def COMPREHENSIVENESS(query, pred, must_have, use_gpt=False, model=None, tokeniz
     return comp_cnt / len(must_have) * 100
     
 
+def response():
+    pass
+
+
 def vllm_infer(client, tokenizer, prompt, stop_seq, max_new_tokens=1024, cot=False, temperature=0.0):
     """
     Generates a single output for a given input prompt using the VLLM backend (offline mode).
@@ -292,7 +296,7 @@ def main():
     parser.add_argument('--model_name_or_path', type=str, default="dmis-lab/selfbiorag_7b") # mistralai/Mistral-7B-v0.1, BioMistral/BioMistral-7B, meta-llama/Llama-2-7b-hf, dmis-lab/selfbiorag_7b, epfl-llm/meditron-7b
     parser.add_argument('--max_length', type=int, default=2048)
     parser.add_argument('--download_dir', type=str, help="specify vllm model download dir",
-                        default="./ssd0/minbyul/cache/") # need change
+                        default="/ssd0/minbyul/cache/") # need change
     parser.add_argument('--max_new_tokens', type=int, default=512)
     parser.add_argument("--world_size",  type=int, default=1,
                         help="world size to use multiple GPUs.")
@@ -302,8 +306,10 @@ def main():
                         help="sampling_trials to derive sampled predictions")
     parser.add_argument("--use_gpt", action="store_true", help="use gpt-4 with openai key")
     parser.add_argument("--eval_data", type=str, default="")
-    parser.add_argument("--wodata_name", type=str, default="")
+    parser.add_argument('--wodata_name', type=str, default="")
     parser.add_argument('--data_size', type=str, default="")
+    parser.add_argument('--after_dpo', action="store_true")
+    parser.add_argument('--iteration', type=int, default=1)
     parser.add_argument('--repetition_penalty', type=float, default=1.0)
     args = parser.parse_args()
 
@@ -344,8 +350,22 @@ def main():
     eval_name = args.eval_data
     train_examples = []
     
-    if os.path.exists(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"):
-        filename = f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
+    if args.wodata_name:
+        if args.after_dpo:
+            filename = f"./alignment-handbook/predictions/pdata_{model_name}_dpo-step{args.iteration}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
+            write_name = f"./alignment-handbook/predictions/pdata_{model_name}_dpo-step{args.iteration}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
+        else:
+            filename = f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
+            write_name = f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp"
+    else:
+        if args.after_dpo:
+            filename = f"./alignment-handbook/predictions/pdata_{model_name}_dpo-step{args.iteration}_{eval_name}_sampling.jsonl_tmp"
+            write_name = f"./alignment-handbook/predictions/pdata_{model_name}_dpo-step{args.iteration}_{eval_name}_sampling.jsonl_tmp"
+        else:
+            filename = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
+            write_name = f"./alignment-handbook/predictions/pdata_{model_name}_{eval_name}_sampling.jsonl_tmp"
+
+    if os.path.exists(filename):
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
@@ -354,6 +374,7 @@ def main():
         with open(filename, 'r') as fp:
             for line in fp.readlines():
                 train_examples.append(json.loads(line))
+    
     
     for inst_idx ,inst in enumerate(train_examples):
         # query
@@ -369,7 +390,7 @@ def main():
 
         # ten generation to make preference collections - check hallucination
         sample_predictions = []
-        if "meditron-7b" == model_name or "llama2-7b" == model_name or "biomistral-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
+        if "meditron-7b" == model_name or "llama2-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
             input_ids = tokenizer.encode(query, return_tensors="pt").to(device)
             output = model.generate(input_ids, max_length=512, no_repeat_ngram_size=2, do_sample=False, top_p=1.0, repetition_penalty=args.repetition_penalty).to(device)
             response = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -408,7 +429,6 @@ def main():
                 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
                 pred = response[len(query):].strip()
                 sample_predictions.append(pred)
-
         else:
             if "selfbiorag" in args.model_name_or_path:
                 query += "[No Retrieval]"
@@ -442,7 +462,7 @@ def main():
             rouge1, rouge2, rougel = ROUGESCORE(sample, inst['Free_form_answer']) # higher better
             bleurt = BLEURT(sample, inst['Free_form_answer'], model=bleurt_model, tokenizer=bleurt_tokenizer) # higher better
             bs_p, bs_r, bs_f1 = BERTSCORE(sample, inst['Free_form_answer']) # higher better
-
+            
             # hallucination and comprehensiveneess with gpt-4 or biobert-nli model
             hall_score = HALLUCINATION(inst["Question"], sample, inst["Must_have"], inst["Nice_to_have"], use_gpt=args.use_gpt, model=nli_model, tokenizer=nli_tokenizer, device=device) # lower better
             comp_score = COMPREHENSIVENESS(inst["Question"], sample, inst["Must_have"], use_gpt=args.use_gpt, model=nli_model, tokenizer=nli_tokenizer, device=device) # higher better
@@ -456,13 +476,13 @@ def main():
 
         if (inst_idx+1) % 5 == 0:
             print (inst)
-            
-            with open(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl_tmp", "w") as outfile:
+           
+            with open(write_name, "w") as outfile:
                 for inst in train_examples:
                     outfile.write(json.dumps(inst))
                     outfile.write("\n")
 
-    with open(f"./alignment-handbook/predictions/pdata_{model_name}_wo-{args.wodata_name}_{eval_name}_sampling.jsonl", "w") as outfile:
+    with open(write_name, "w") as outfile:
         for inst in train_examples:
             outfile.write(json.dumps(inst))
             outfile.write("\n")
