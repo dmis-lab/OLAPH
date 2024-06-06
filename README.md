@@ -15,6 +15,7 @@ This is a repository for [OLAPH: Improving Factuality in Biomedical Long-form Qu
 ![](figures/model_figure.png)
 
 ## Updates
+\[**June 08, 2024**\] We provide A/B test result from 3 medical experts using 9 [MedPALM](https://arxiv.org/abs/2212.13138) criteria in `Human-Evaluation`. \
 \[**May 31, 2024**\] Introducing two videos: [OLAPH](https://www.youtube.com/watch?v=IQd39sYOprI) (Korean) & [OLAPH](https://youtu.be/7wZpIWCEAaY) (English) in youtube! \
 \[**May 30, 2024**\] update the codes to train and inference for [Gemma-7b](https://huggingface.co/google/gemma-7b), [Llama-3-8b](https://huggingface.co/meta-llama/Meta-Llama-3-8B), and [Llama-3-8b-Instruct](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct). \
 \[**May 23, 2024**\] **OLAPH** has been released.
