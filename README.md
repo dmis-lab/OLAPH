@@ -236,6 +236,9 @@ We provide detail experimental settings and results in [FActScore](Factscore).
 
 A. We provide sampling results of every 7B models in the following folder `alignment-handbook/predictions/`.
 
+**2. [A/B Testing] Open sourcing about Human evaluation for K-QA datasets**
+
+A. We provide gpt-4 evaluation and 3 medical experts evaluation about A/B testing in `Human-Evaluation` folder.
 
 
 ## Citation

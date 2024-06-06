@@ -326,7 +326,7 @@ def main():
         model_name = "mistral-7b"
     elif "llama-2" in args.model_name_or_path.lower():
         model_name = "llama2-7b"
-    elif "llama-3-8b-instruct" in args.model_name_or_path.lower():
+    elif "llama-3-8b-instruct" in args.model_name_or_path.lower() or "llama3-8b-instruct" in args.model_name_or_path.lower():
         model_name = "llama3-8b-instruct"
     elif "llama-3" in args.model_name_or_path.lower():
         model_name = "llama3-8b"
@@ -390,7 +390,7 @@ def main():
 
         # ten generation to make preference collections - check hallucination
         sample_predictions = []
-        if "meditron-7b" == model_name or "llama2-7b" == model_name or "mistral-7b" == model_name or "llama3-8b" == model_name:
+        if "meditron" in args.model_name_or_path.lower() or "llama" in args.model_name_or_path.lower() or "mistral" in args.model_name_or_path.lower():
             input_ids = tokenizer.encode(query, return_tensors="pt").to(device)
             output = model.generate(input_ids, max_length=512, no_repeat_ngram_size=2, do_sample=False, top_p=1.0, repetition_penalty=args.repetition_penalty).to(device)
             response = tokenizer.decode(output[0], skip_special_tokens=True)
