@@ -145,12 +145,21 @@ CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 ```
 # Sampling prediction during Iterative learning (i.e., after SFT or DPO) \
 
-export DATA_NAME=live_qa \
 export HUGGINGFACE_MODEL_DIR=your_trained_model \
 
 CUDA_VISIBLE_DEVICES=0 python pdata_collection.py \
 --model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
 --eval_data ${DATA_NAME} \
+```
+
+```
+# Make supervised fine-tuning dataset as follows
+
+export WODATA_NAME=kqa_golden # it must be different compared to DATA_NAME \
+
+python pred_to_sft.py \
+--model_name_or_path ${HUGGINGFACE_MODEL_DIR} \
+--wodata_name ${WODATA_NAME} \
 ```
 
 
