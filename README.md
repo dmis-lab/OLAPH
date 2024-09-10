@@ -251,6 +251,13 @@ A. We provide sampling results of every 7B models in the following folder `align
 
 A. We provide gpt-4 evaluation and 3 medical experts evaluation about A/B testing in `Human-Evaluation` folder.
 
+**3. When using Wikipedia as the knowledge source, it seems the topics need to be titles of the Wikipedia pages. I wonder what topics you use for datasets like K-QA?**
+
+A. We manually extracted biomedical or medical named entities from the questions in the K-QA dataset, as they were intuitively recognizable. If you want to utilize this in an automatic way, you could combine it with a named entity recognition model to extract the entities, then perform normalization. By doing this, you can construct a knowledge source using retrieved chunks of entities that have corresponding pages on Wikipedia.
+
+**4. Is it possible to share the biomedical knowledge source that you built for Factscore?**
+
+A. I prefer you to look at the following url [Self-BioRAG](https://github.com/dmis-lab/self-biorag) to use our biomedical knowledge source!
 
 ## Citation
 ```
